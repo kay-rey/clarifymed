@@ -1,46 +1,95 @@
 import { NextResponse } from 'next/server'
 import { getDb } from '@/lib/db/dbConnect'
-import type { CreateUserInput } from '@/lib/models/User'
+import type { CreateMedicalTermInput } from '@/lib/models/MedicalTerm'
 import { ObjectId } from 'mongodb'
-
 
 export async function POST(request: Request) {
     try {
-        const body: CreateUserInput = await request.json()
+        const body: CreateMedicalTermInput = await request.json()
         const collections = await getDb()
         
-        const result = await collections.users.insertOne({
+        const result = await collections.medicalTerms.insertOne({
             ...body,
-            _id: new (ObjectId)(),
+            _id: new ObjectId(),
+            usage: {
+                searchCount: 0,
+                lastAccessed: new Date()
+            },
             createdAt: new Date(),
             updatedAt: new Date()
         })
         
         return NextResponse.json({ id: result.insertedId }, { status: 201 })
     } catch (error) {
-        console.error('Failed to create user:', error)
-        return NextResponse.json({ error: 'Failed to create user' }, { status: 500 })
+        console.error('Failed to create medical term:', error)
+        return NextResponse.json({ error: 'Failed to create medical term' }, { status: 500 })
     }
 }
 
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url)
-        const email = searchParams.get('email')
+        const term = searchParams.get('term')
+        const category = searchParams.get('category')
         const collections = await getDb()
 
-        if (email) {
-            const user = await collections.users.findOne({ email })
-            if (!user) {
-                return NextResponse.json({ error: 'User not found' }, { status: 404 })
+        // Search by term
+        if (term) {
+            // First, check cache
+            const result = await collections.medicalTerms.findOne({
+                $text: { $search: term }
+            })
+            
+            if (result) {
+                // Update usage statistics
+                await collections.medicalTerms.updateOne(
+                    { _id: result._id },
+                    {
+                        $inc: { 'usage.searchCount': 1 },
+                        $set: { 'usage.lastAccessed': new Date() }
+                    }
+                )
+                return NextResponse.json(result)
             }
-            return NextResponse.json(user)
+
+            // TODO: AI Team - If term not found in cache, use AI to generate definition
+            // const aiDefinition = await generateMedicalDefinition(term)
+            // const newTerm = {
+            //     term,
+            //     definition: aiDefinition.simple,
+            //     technicalDefinition: aiDefinition.technical,
+            //     category: aiDefinition.categories,
+            //     metadata: {
+            //         complexity: aiDefinition.complexity,
+            //         verified: true
+            //     }
+            // }
+            // await collections.medicalTerms.insertOne(newTerm)
+            // return NextResponse.json(newTerm)
+            
+            return NextResponse.json({ error: 'Term not found' })
         }
 
-        const users = await collections.users.find().toArray()
-        return NextResponse.json(users)
+        // ...existing code for category filtering and popular terms...
+
+        // Filter by category
+        if (category) {
+            const terms = await collections.medicalTerms
+                .find({ category: category })
+                .toArray()
+            return NextResponse.json(terms)
+        }
+
+        // Return most frequently accessed terms
+        const terms = await collections.medicalTerms
+            .find()
+            .sort({ 'usage.searchCount': -1 })
+            .limit(100)
+            .toArray()
+            
+        return NextResponse.json(terms)
     } catch (error) {
-        console.error('Failed to fetch users:', error)
-        return NextResponse.json({ error: 'Failed to fetch users' }, { status: 500 })
+        console.error('Failed to fetch medical terms:', error)
+        return NextResponse.json({ error: 'Failed to fetch medical terms' }, { status: 500 })
     }
 }
