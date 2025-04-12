@@ -23,9 +23,27 @@ export interface MedicalQuery extends BaseModel {
         /** When the query was processed */
         processedAt?: Date
         /** AI model used for clarification */
-        aiModel?: string
+        model: 'gemini-2.0-flash'
         /** Confidence score of the clarification */
         confidence?: number
+        /** Gemini 2.0 Flash specific configuration */
+        geminiConfig: {
+            temperature: number
+            topP: number
+            topK: number
+            maxOutputTokens: number
+        }
+        /** Safety ratings for the clarification */
+        safetyRatings?: {
+            category: string
+            probability: string
+        }[]
+    }
+    /** Error information if the query processing failed */
+    error?: {
+        code: string
+        message: string
+        timestamp: Date
     }
 }
 

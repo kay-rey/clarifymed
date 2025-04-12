@@ -8,7 +8,18 @@
  * - In production: Creates new connections as needed
  */
 
+import * as dotenv from 'dotenv'
+import path from 'path'
 import { MongoClient } from 'mongodb'
+
+// Explicitly load .env.local before anything else
+const envPath = path.join(process.cwd(), '.env.local')
+const result = dotenv.config({ path: envPath })
+
+if (result.error) {
+    console.error('Failed to load .env.local:', result.error.message)
+    throw new Error(`Failed to load .env.local: ${result.error.message}`)
+}
 
 if (!process.env.MONGODB_URI) {
     throw new Error('Invalid/Missing environment variable: "MONGODB_URI"')
