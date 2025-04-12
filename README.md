@@ -72,7 +72,6 @@ git push origin feature/your-feature-name
 5. **Create Pull Request**
 - Create PR from your `feature/*` branch to `dev`
 - Get code review
-- Pass CI checks
 - Merge to `dev`
 
 6. **Release Process**
@@ -82,7 +81,7 @@ git push origin feature/your-feature-name
 ## 🛠️ Tech Stack
 
 - **Frontend:** Next.js 15 (App Router)
-- **Styling:** Tailwind CSS
+- **Styling:** Tailwind CSS, shadcn
 - **Authentication:** Auth0
 - **Database:** MongoDB
 - **AI:** Google's Gemini AI
