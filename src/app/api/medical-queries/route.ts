@@ -1,22 +1,41 @@
+/**
+ * Medical Queries API Routes
+ * Handles user medical text queries and their processing status.
+ * Integrates with Gemini AI for text clarification.
+ */
+
 import { NextResponse } from 'next/server'
 import { getDb } from '@/lib/db/dbConnect'
 import type { CreateMedicalQueryInput } from '@/lib/models/MedicalQuery'
 import { ObjectId } from 'mongodb'
 
-
+/**
+ * Creates a new medical query for processing
+ * @param request Request containing query text and user ID
+ * @returns Created query's ID or error response
+ */
 export async function POST(request: Request) {
     try {
         const body: CreateMedicalQueryInput = await request.json()
         const collections = await getDb()
-        
+
         const result = await collections.medicalQueries.insertOne({
             ...body,
             status: 'pending',
-            _id: new (ObjectId)(),
+            metadata: {
+                model: 'gemini-2.0-flash',
+                geminiConfig: {
+                    temperature: 0.7,
+                    topP: 0.8,
+                    topK: 40,
+                    maxOutputTokens: 2048
+                },
+                processedAt: null
+            },
             createdAt: new Date(),
             updatedAt: new Date()
         })
-        
+
         return NextResponse.json({ id: result.insertedId }, { status: 201 })
     } catch (error) {
         console.error('Failed to create medical query:', error)
@@ -24,6 +43,11 @@ export async function POST(request: Request) {
     }
 }
 
+/**
+ * Retrieves medical queries with optional filtering
+ * @param request Request with optional userId or status parameters
+ * @returns Matching queries or error response
+ */
 export async function GET(request: Request) {
     try {
         const { searchParams } = new URL(request.url)
@@ -31,15 +55,17 @@ export async function GET(request: Request) {
         const status = searchParams.get('status')
         const collections = await getDb()
 
-        const query: { userId?: string; status?: string } = {}
+        // Build query filters
+        const query: any = {}
         if (userId) query.userId = userId
         if (status) query.status = status
 
+        // Fetch queries with optional filters
         const queries = await collections.medicalQueries
             .find(query)
             .sort({ createdAt: -1 })
             .toArray()
-            
+
         return NextResponse.json(queries)
     } catch (error) {
         console.error('Failed to fetch medical queries:', error)
