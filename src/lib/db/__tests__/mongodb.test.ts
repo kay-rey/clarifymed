@@ -23,6 +23,7 @@ describe('MongoDB Connection', () => {
 
   test('should create and retrieve a user', async () => {
     const testUser = {
+      _id: new ObjectId(),
       email: 'test@example.com',
       name: 'Test User',
       auth0Id: 'auth0|' + new ObjectId().toString(),

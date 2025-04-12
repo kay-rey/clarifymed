@@ -3,6 +3,7 @@ import { getDb } from '@/lib/db/dbConnect'
 import type { CreateUserInput } from '@/lib/models/User'
 import { ObjectId } from 'mongodb'
 
+
 export async function POST(request: Request) {
     try {
         const body: CreateUserInput = await request.json()
