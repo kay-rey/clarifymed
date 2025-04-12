@@ -1,36 +1,189 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# ClarifyMed 🏥
 
-## Getting Started
+AI-powered medical terminology clarification platform. Making healthcare communication accessible for everyone.
 
-First, run the development server:
+## 🚀 Quick Start
 
+1. **Clone the repository**
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/kay-rey/clarifymed.git
+cd clarifymed
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+2. **Install dependencies**
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+3. **Set up environment variables**
+```bash
+# Copy the example env file
+cp .env.example .env.local
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Fill in your environment variables in .env.local:
+# - Auth0 credentials from https://manage.auth0.com/
+# - MongoDB URI from https://www.mongodb.com/cloud/atlas
+# - Gemini API key from https://makersuite.google.com/app/apikey
+```
 
-## Learn More
+4. **Switch to dev branch**
+```bash
+git checkout dev
+```
 
-To learn more about Next.js, take a look at the following resources:
+5. **Run the development server**
+```bash
+npm run dev
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+6. **View the app**
+- Open [http://localhost:3000](http://localhost:3000) in your browser
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## 🌿 Branch Strategy
 
-## Deploy on Vercel
+- `main` - Production-ready code (protected)
+- `dev` - Development branch, all feature branches merge here first
+- `feature/*` - Individual feature branches
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+### Development Workflow
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. **Start with dev branch**
+```bash
+git checkout dev
+git pull origin dev
+```
+
+2. **Create your feature branch**
+```bash
+git checkout -b feature/your-feature-name
+```
+
+3. **Make your changes and commit**
+```bash
+git add .
+git commit -m "Add: description of your changes"
+```
+
+4. **Push your feature branch**
+```bash
+git push origin feature/your-feature-name
+```
+
+5. **Create Pull Request**
+- Create PR from your `feature/*` branch to `dev`
+- Get code review
+- Pass CI checks
+- Merge to `dev`
+
+6. **Release Process**
+- Periodic merges from `dev` to `main`
+- Only fully tested, reviewed code goes to `main`
+
+## 🛠️ Tech Stack
+
+- **Frontend:** Next.js 15 (App Router)
+- **Styling:** Tailwind CSS
+- **Authentication:** Auth0
+- **Database:** MongoDB
+- **AI:** Google's Gemini AI
+- **API Integration:** Axios
+
+## 📁 Project Structure
+
+```
+clarifymed/
+├── src/
+│   ├── app/              # App router pages
+│   ├── components/       # Reusable components
+│   ├── lib/             # Utility functions
+│   └── styles/          # Global styles
+├── public/              # Static files
+└── package.json         # Project dependencies
+```
+
+## 🔍 Available Scripts
+
+- `npm run dev` - Start development server
+- `npm run build` - Build for production
+- `npm start` - Start production server
+- `npm run lint` - Run ESLint
+
+## ⚠️ Important Notes
+
+1. **Environment Variables**
+   - Never commit `.env.local` to git
+   - Get the required API keys from team lead
+   - Use test credentials for development
+
+2. **Branch Protection**
+   - `main` branch is protected
+   - All changes must go through PR review
+   - CI checks must pass before merging
+   - Always work from `dev` branch
+
+3. **Code Standards**
+   - Use meaningful component names
+   - Follow React best practices
+   - Write clear commit messages
+   - Include tests for new features
+
+## 🏃‍♂️ Next Steps (Hackathon Tasks)
+
+1. [ ] Set up Auth0 authentication
+2. [ ] Implement MongoDB connection
+3. [ ] Configure Gemini AI integration
+4. [ ] Create basic UI components
+5. [ ] Set up API routes
+6. [ ] Implement medical text processing
+7. [ ] Add user feedback system
+8. [ ] Create documentation
+
+## ⏰ Timeline
+
+- Start: 2025-04-12 04:58:45 UTC
+- Deadline: 2025-04-13 07:00:00 UTC
+- Remaining: ~26 hours
+
+## 🆘 Need Help?
+
+- **Technical Issues:** Tag @kay-rey in GitHub issues
+- **API Access:** Contact team lead for credentials
+- **Documentation:** Check [Next.js Docs](https://nextjs.org/docs)
+- **Team Chat:** Join our Discord/Slack channel
+
+## 👥 Team
+
+- Project Lead: [@kay-rey](https://github.com/kay-rey)
+- [Add team members here]
+
+## 🔧 Development Guidelines
+
+1. **Code Style**
+   - Use ES6+ features
+   - Follow Next.js 15 best practices
+   - Use Typescript-like JSDoc comments
+   - Implement error handling
+
+2. **Component Structure**
+   - Functional components only
+   - Use hooks for state management
+   - Keep components small and focused
+   - Implement proper prop validation
+
+3. **Git Workflow**
+   - Keep commits atomic
+   - Use meaningful commit messages
+   - Reference issues in commits
+   - Keep PRs focused and small
+
+## 📚 Resources
+
+- [Next.js Documentation](https://nextjs.org/docs)
+- [Tailwind CSS Documentation](https://tailwindcss.com/docs)
+- [Auth0 Next.js SDK](https://auth0.com/docs/quickstart/webapp/nextjs)
+- [MongoDB Node.js Driver](https://docs.mongodb.com/drivers/node/)
+- [Google AI SDK](https://ai.google.dev/docs)
+
+---
+
+Built with 💚 for AI Hackfest 2025
