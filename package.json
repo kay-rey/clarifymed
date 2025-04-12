@@ -12,7 +12,6 @@
     "test:db": "ts-node -r dotenv/config -r tsconfig-paths/register src/lib/db/__tests__/utils/test-connection.ts",
     "verify-env": "ts-node -r dotenv/config src/lib/db/utils/verify-env.ts",
     "debug:env": "ts-node -r dotenv/config src/lib/utils/debug/env.ts"
-
   },
   "dependencies": {
     "@auth0/nextjs-auth0": "^4.4.2",
