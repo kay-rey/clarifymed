@@ -13,19 +13,16 @@ import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
-// This is sample data.
-const data = {
-	navMain: [
-		{
-			title: "Dashboard",
-			url: "/dashboard",
-		},
-		{
-			title: "Saved Notes",
-			url: "/saved",
-		},
-	],
-};
+const navMain = [
+	{
+		title: "Dashboard",
+		url: "/dashboard",
+	},
+	{
+		title: "Saved Notes",
+		url: "/saved",
+	},
+];
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 	const pathname = usePathname();
@@ -48,9 +45,11 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
 				</h1>
 			</SidebarHeader>
 			<SidebarContent>
-				{data.navMain.map((item) => (
+				{navMain.map((item) => (
 					<SidebarGroup key={item.title}>
 						<SidebarMenuButton
+							size={"lg"}
+							className="p-4"
 							asChild
 							isActive={pathname === item.url}
 						>
