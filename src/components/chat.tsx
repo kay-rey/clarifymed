@@ -24,6 +24,18 @@ import Loader from "./loader";
 import DisclaimerDialog from "./disclaimer-dialog";
 import { AlertDialogTrigger } from "./ui/alert-dialog";
 
+const markdownTheme = {
+	p: "mb-4 leading-relaxed",
+	h1: "text-2xl font-bold mb-4 ",
+	h2: "text-xl font-semibold mb-3",
+	h3: "text-lg font-medium mb-2",
+	ul: "list-disc pl-6 mb-4 space-y-2", // Changed from list-inside
+	ol: "list-decimal pl-6 mb-4 space-y-2", // Changed from list-inside
+	li: "pl-2",
+	code: "rounded px-1 py-0.5 font-mono text-sm",
+	pre: "rounded p-4 mb-4 overflow-x-auto",
+};
+
 export function Chat() {
 	const [messages, setMessages] = useState<Content[]>([]);
 	const [isAiLoading, setAiLoading] = useState<boolean>(false);
@@ -84,6 +96,15 @@ export function Chat() {
 									<Textarea
 										placeholder="What is hypertension?"
 										{...field}
+										onKeyDown={(e) => {
+											if (
+												e.key === "Enter" &&
+												!e.shiftKey
+											) {
+												e.preventDefault();
+												form.handleSubmit(onSubmit)();
+											}
+										}}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -123,7 +144,59 @@ export function Chat() {
 								: "flex flex-col self-start",
 						)}
 					>
-						<Markdown>
+						<Markdown
+							components={{
+								p: ({ node, ...props }) => (
+									<p className={markdownTheme.p} {...props} />
+								),
+								h1: ({ node, ...props }) => (
+									<h1
+										className={markdownTheme.h1}
+										{...props}
+									/>
+								),
+								h2: ({ node, ...props }) => (
+									<h2
+										className={markdownTheme.h2}
+										{...props}
+									/>
+								),
+								h3: ({ node, ...props }) => (
+									<h3
+										className={markdownTheme.h3}
+										{...props}
+									/>
+								),
+								ul: ({ node, ...props }) => (
+									<ul
+										className={markdownTheme.ul}
+										{...props}
+									/>
+								),
+								ol: ({ node, ...props }) => (
+									<ol
+										className={markdownTheme.ol}
+										{...props}
+									/>
+								),
+								li: ({ node, ...props }) => (
+									<li
+										className={markdownTheme.li}
+										{...props}
+									/>
+								),
+								code: ({ node, inline, ...props }) => (
+									<code
+										className={
+											inline
+												? markdownTheme.code
+												: markdownTheme.pre
+										}
+										{...props}
+									/>
+								),
+							}}
+						>
 							{message.parts && message.parts[0].text}
 						</Markdown>
 					</div>
