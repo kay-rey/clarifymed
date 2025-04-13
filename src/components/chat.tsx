@@ -21,6 +21,7 @@ import Markdown from "react-markdown";
 import { cn } from "@/lib/utils";
 import { Textarea } from "./ui/textarea";
 import Loader from "./loader";
+import { useUser } from '@auth0/nextjs-auth0';
 import DisclaimerDialog from "./disclaimer-dialog";
 import { AlertDialogTrigger } from "./ui/alert-dialog";
 
@@ -37,6 +38,7 @@ const markdownTheme = {
 };
 
 export function Chat() {
+	const { user } = useUser();
 	const [messages, setMessages] = useState<Content[]>([]);
 	const [isAiLoading, setAiLoading] = useState<boolean>(false);
 
@@ -64,6 +66,12 @@ export function Chat() {
 		setAiLoading(true);
 
 		const response = await axios.post("/api/clarify", allMessages);
+
+		await axios.post("/api/saved-responses", {
+			userId: user?.sub,
+			question: values.question,
+			response: response.data
+		  });
 
 		const aiResponse: Content = {
 			role: "model",
