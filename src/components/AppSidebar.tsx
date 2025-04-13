@@ -10,7 +10,7 @@ import {
 
   SidebarRail,
 } from "@/components/ui/sidebar"
-import Logout from "./Logout"
+
 
 // This is sample data.
 const data = {
@@ -39,9 +39,6 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         ))}
       </SidebarContent>
       <SidebarRail />
-      <SidebarFooter>
-        <Logout />
-      </SidebarFooter>
     </Sidebar>
   )
 }
