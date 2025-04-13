@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { medicalAiPromptSchema } from "@/lib/validation/schemas";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Content } from "@google/genai";
 import FormattedMarkdown from "./ui/formatted-markdown";
 import { cn } from "@/lib/utils";
@@ -34,6 +34,7 @@ export function Chat() {
 	const { user } = useUser();
 	const [messages, setMessages] = useState<Content[]>([]);
 	const [isAiLoading, setAiLoading] = useState<boolean>(false);
+	const messagesEndRef = useRef<HTMLDivElement>(null);
 
 	const form = useForm<z.infer<typeof medicalAiPromptSchema>>({
 		resolver: zodResolver(medicalAiPromptSchema),
@@ -71,6 +72,12 @@ export function Chat() {
 
 		setAiLoading(false);
 	}
+
+	// whenever a new response comes in, it is scrolled into view
+	useEffect(
+		() => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }),
+		[messages],
+	);
 
 	return (
 		<article className="space-y-10 p-2 sm:p-6 md:px-10">
@@ -160,6 +167,7 @@ export function Chat() {
 					</div>
 				))}
 				{isAiLoading && <Loader />}
+				<div ref={messagesEndRef} />
 			</section>
 		</article>
 	);
