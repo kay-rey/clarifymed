@@ -130,12 +130,12 @@
   --chart-5: var(--cream-400);
 
   /* Sidebar colors */
-  --sidebar: var(--lapis-lazuli-100);
+  --sidebar: var(--lapis-lazuli-300);
   --sidebar-foreground: white;
   --sidebar-primary: var(--persian-green);
   --sidebar-primary-foreground: white;
-  --sidebar-accent: var(--mint-300);
-  --sidebar-accent-foreground: white;
+  --sidebar-accent: var(--cream-600);
+  --sidebar-accent-foreground: var(--mint-400);
   --sidebar-border: var(--lapis-lazuli-300);
   --sidebar-ring: var(--teal-600);
 }
