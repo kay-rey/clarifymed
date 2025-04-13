@@ -1,26 +1,9 @@
 import { getDb } from '@/lib/db/dbConnect';
 import { NextRequest, NextResponse } from 'next/server';
+import { SavedResponse } from '@/lib/models/SavedResponse';
+import { ObjectId } from 'mongodb';
 
-export async function POST(request: NextRequest) {
-    try {
-        const body = await request.json();
-        const collections = await getDb();
-
-        const result = await collections.savedResponses.insertOne({
-            ...body,
-            createdAt: new Date(),
-            updatedAt: new Date()
-        });
-
-        return NextResponse.json({ id: result.insertedId }, { status: 201 });
-    } catch (error) {
-        console.error("Failed to save response:", error);
-        return NextResponse.json(
-            { error: "Failed to save response" },
-            { status: 500 }
-        );
-    }
-}
+// ...existing POST function...
 
 export async function GET(request: NextRequest) {
     try {
@@ -36,7 +19,7 @@ export async function GET(request: NextRequest) {
 
         const collections = await getDb();
         const responses = await collections.savedResponses
-            .find({ userId })
+            .find<SavedResponse>({ userId: new ObjectId(userId) })
             .sort({ createdAt: -1 })
             .toArray();
 
