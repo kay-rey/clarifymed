@@ -2,6 +2,7 @@
 import { AppSidebar } from "@/components/AppSidebar";
 import { Separator } from "@/components/ui/separator"
 import { SidebarInset, SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar"
+import {ClarificationCard} from "@/components/ClarificationCard";
 
 
 const Dashboard = () => {
@@ -21,7 +22,9 @@ const Dashboard = () => {
             <div className="aspect-video rounded-xl bg-muted/50" />
             <div className="aspect-video rounded-xl bg-muted/50" />
           </div>
-          <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min" />
+          <div className="min-h-[100vh] flex-1 rounded-xl bg-muted/50 md:min-h-min p-4">
+            <ClarificationCard />
+          </div>
         </div>
       </SidebarInset>
     </SidebarProvider>
