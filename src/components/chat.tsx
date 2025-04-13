@@ -8,7 +8,6 @@ import { Button } from "@/components/ui/button";
 import {
 	Form,
 	FormControl,
-	FormDescription,
 	FormField,
 	FormItem,
 	FormLabel,
@@ -22,6 +21,20 @@ import Markdown from "react-markdown";
 import { cn } from "@/lib/utils";
 import { Textarea } from "./ui/textarea";
 import Loader from "./loader";
+import DisclaimerDialog from "./disclaimer-dialog";
+import { AlertDialogTrigger } from "./ui/alert-dialog";
+
+const markdownTheme = {
+	p: "mb-4 leading-relaxed",
+	h1: "text-2xl font-bold mb-4 ",
+	h2: "text-xl font-semibold mb-3",
+	h3: "text-lg font-medium mb-2",
+	ul: "list-disc pl-6 mb-4 space-y-2", // Changed from list-inside
+	ol: "list-decimal pl-6 mb-4 space-y-2", // Changed from list-inside
+	li: "pl-2",
+	code: "rounded px-1 py-0.5 font-mono text-sm",
+	pre: "rounded p-4 mb-4 overflow-x-auto",
+};
 
 export function Chat() {
 	const [messages, setMessages] = useState<Content[]>([]);
@@ -33,6 +46,8 @@ export function Chat() {
 			question: "",
 		},
 	});
+
+	const { submitCount, isSubmitting } = form.formState;
 
 	async function onSubmit(values: z.infer<typeof medicalAiPromptSchema>) {
 		// TODO: Error handling
@@ -67,41 +82,58 @@ export function Chat() {
 			<Form {...form}>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
-					className="mx-auto max-w-lg space-y-4"
+					className="mx-auto max-w-xl space-y-4"
 				>
 					<FormField
 						control={form.control}
 						name="question"
 						render={({ field }) => (
 							<FormItem>
-								<FormLabel>Ask a medical question for clarification</FormLabel>
+								<FormLabel>
+									Ask a medical question for clarification
+								</FormLabel>
 								<FormControl>
-									<Textarea placeholder="What is hypertension?" {...field} onKeyDown={(e) => {
-										if(e.key === 'Enter' && !e.shiftKey){
-											e.preventDefault();
-											form.handleSubmit(onSubmit)();
-										}
-									}} />
+									<Textarea
+										placeholder="What is hypertension?"
+										{...field}
+										onKeyDown={(e) => {
+											if (
+												e.key === "Enter" &&
+												!e.shiftKey
+											) {
+												e.preventDefault();
+												form.handleSubmit(onSubmit)();
+											}
+										}}
+									/>
 								</FormControl>
-								<FormDescription>
-									<span className="font-bold">Disclaimer:</span> This app uses
-									AI to provide simplified explanations of medical terms. The
-									information provided is for general knowledge and
-									informational purposes only, and does not constitute medical
-									advice. It is essential 1 to consult with a qualified
-									healthcare professional for any health concerns or before
-									making any decisions related to your health or treatment. 2
-									Reliance on the information provided by this app is solely at
-									your own risk.
-								</FormDescription>
 								<FormMessage />
 							</FormItem>
 						)}
 					/>
-					<Button type="submit">Ask</Button>
+					<DisclaimerDialog>
+						{submitCount === 0 ? (
+							<AlertDialogTrigger asChild disabled={isSubmitting}>
+								<Button
+									type="submit"
+									className="cursor-pointer"
+								>
+									Ask
+								</Button>
+							</AlertDialogTrigger>
+						) : (
+							<Button
+								type="submit"
+								disabled={isSubmitting}
+								className="cursor-pointer"
+							>
+								Ask
+							</Button>
+						)}
+					</DisclaimerDialog>
 				</form>
 			</Form>
-			<section className="mx-auto flex max-w-lg flex-col gap-y-6">
+			<section className="mx-auto flex max-w-xl flex-col gap-y-6">
 				{messages.map((message, index) => (
 					<div
 						key={index}
@@ -112,7 +144,61 @@ export function Chat() {
 								: "flex flex-col self-start",
 						)}
 					>
-						<Markdown>{message.parts && message.parts[0].text}</Markdown>
+						<Markdown
+							components={{
+								p: ({ node, ...props }) => (
+									<p className={markdownTheme.p} {...props} />
+								),
+								h1: ({ node, ...props }) => (
+									<h1
+										className={markdownTheme.h1}
+										{...props}
+									/>
+								),
+								h2: ({ node, ...props }) => (
+									<h2
+										className={markdownTheme.h2}
+										{...props}
+									/>
+								),
+								h3: ({ node, ...props }) => (
+									<h3
+										className={markdownTheme.h3}
+										{...props}
+									/>
+								),
+								ul: ({ node, ...props }) => (
+									<ul
+										className={markdownTheme.ul}
+										{...props}
+									/>
+								),
+								ol: ({ node, ...props }) => (
+									<ol
+										className={markdownTheme.ol}
+										{...props}
+									/>
+								),
+								li: ({ node, ...props }) => (
+									<li
+										className={markdownTheme.li}
+										{...props}
+									/>
+								),
+								code: ({ node, inline, ...props }) => (
+									<code
+										className={
+											inline
+												? markdownTheme.code
+												: markdownTheme.pre
+										}
+										{...props}
+									/>
+								),
+							}}
+						>
+							{message.parts && message.parts[0].text}
+						</Markdown>
 					</div>
 				))}
 				{isAiLoading && <Loader />}
