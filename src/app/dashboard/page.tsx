@@ -1,18 +1,34 @@
+import { AppSidebar } from "@/components/AppSidebar";
 import { Chat } from "@/components/chat";
-import React from "react";
+import { Separator } from "@/components/ui/separator";
+import {
+	SidebarInset,
+	SidebarProvider,
+	SidebarTrigger,
+} from "@/components/ui/sidebar";
 
-const page = () => {
+const Dashboard = () => {
 	return (
-		<div>
-			Hello Dashboard bruh
-			<p>
-				<a href="/auth/logout">
-					<button>Log out</button>
-				</a>
-			</p>
-			<Chat />
-		</div>
+		<SidebarProvider>
+			<AppSidebar />
+			<SidebarInset>
+				<header className="flex h-16 shrink-0 items-center gap-2 border-b px-4">
+					<SidebarTrigger className="-ml-1" />
+					<Separator orientation="vertical" className="mr-2 h-4" />
+				</header>
+				<div className="flex flex-1 flex-col gap-4 p-4">
+					<div className="grid auto-rows-min gap-4 md:grid-cols-3">
+						<div className="bg-muted/50 aspect-video rounded-xl" />
+						<div className="bg-muted/50 aspect-video rounded-xl" />
+						<div className="bg-muted/50 aspect-video rounded-xl" />
+					</div>
+					<div className="bg-muted/50 min-h-[100vh] flex-1 rounded-xl md:min-h-min">
+						<Chat />
+					</div>
+				</div>
+			</SidebarInset>
+		</SidebarProvider>
 	);
 };
 
-export default page;
+export default Dashboard;
