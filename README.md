@@ -13,6 +13,7 @@ AI-powered medical terminology clarification platform that bridges the gap betwe
 ## 🚀 Quick Start
 
 1. **Clone and Install**
+
 ```bash
 git clone https://github.com/kay-rey/clarifymed.git
 cd clarifymed
@@ -20,11 +21,13 @@ npm install
 ```
 
 2. **Set up Environment**
+
 ```bash
 cp .env.example .env.local
 ```
 
 Add your credentials to `.env.local`:
+
 - `AUTH0_DOMAIN` - Auth0 application domain
 - `AUTH0_CLIENT_ID` - Auth0 client ID
 - `AUTH0_CLIENT_SECRET` - Auth0 client secret
@@ -32,6 +35,7 @@ Add your credentials to `.env.local`:
 - `GEMINI_API_KEY` - Google Gemini AI API key
 
 3. **Start Development**
+
 ```bash
 git checkout dev
 npm run dev
@@ -66,17 +70,20 @@ src/
 ## 🔄 Development Workflow
 
 1. **Start from dev**
+
 ```bash
 git checkout dev
 git pull origin dev
 ```
 
 2. **Create feature branch**
+
 ```bash
 git checkout -b feature/your-feature
 ```
 
 3. **Commit changes**
+
 ```bash
 git add .
 git commit -m "Add: your feature description"
@@ -117,7 +124,7 @@ npm run test:coverage
 
 - [Kevin Reyes](https://github.com/kay-rey)
 - [Timothy Phan](https://github.com/TimothyPhan2)
-- [Ethan Enkhtur](hhttps://github.com/ethanenkhtur)
+- [Ethan Enkhtur](https://github.com/ethanenkhtur)
 - [Prachi Saibewar](https://github.com/prachics)
 
 ## 📚 Resources
