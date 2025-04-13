@@ -2,11 +2,13 @@ import { Collection, Db } from 'mongodb'
 import { User } from '../models/User'
 import { MedicalTerm } from '../models/MedicalTerm'
 import { MedicalQuery } from '../models/MedicalQuery'
+import { SavedResponse } from '../models/SavedResponse'
 
 export interface Collections {
     users: Collection<User>
     medicalTerms: Collection<MedicalTerm>
     medicalQueries: Collection<MedicalQuery>
+    savedResponses: Collection<SavedResponse>
     db: Db  // Add this to access raw database operations
 }
 
@@ -14,6 +16,7 @@ export async function getCollections(db: Db): Promise<Collections> {
     const users = db.collection<User>('users')
     const medicalTerms = db.collection<MedicalTerm>('medicalTerms')
     const medicalQueries = db.collection<MedicalQuery>('medicalQueries')
+    const savedResponses = db.collection<SavedResponse>('savedResponses')
     
     // User collection indexes
     await users.createIndex({ email: 1 }, { unique: true })
@@ -32,6 +35,12 @@ export async function getCollections(db: Db): Promise<Collections> {
     await medicalQueries.createIndex({ status: 1 }) // For status-based filtering
     await medicalQueries.createIndex({ createdAt: -1 }) // For time-based sorting
     await medicalQueries.createIndex({ 'metadata.processedAt': 1 }) // For processing time queries
+
+    // Saved Responses indexes
+    await savedResponses.createIndex({ userId: 1 })  // For user's saved responses lookup
+    await savedResponses.createIndex({ createdAt: -1 })  // For time-based sorting
+    await savedResponses.createIndex({ userId: 1, createdAt: -1 })  // Compound index for efficient user queries
     
-    return { users, medicalTerms, medicalQueries, db }
+    
+    return { users, medicalTerms, medicalQueries, savedResponses, db }
 }
