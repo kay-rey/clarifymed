@@ -15,7 +15,7 @@ import {
 } from "@/components/ui/form";
 import { medicalAiPromptSchema } from "@/lib/validation/schemas";
 import axios from "axios";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Content } from "@google/genai";
 import FormattedMarkdown from "./ui/formatted-markdown";
 import { cn } from "@/lib/utils";
@@ -34,6 +34,7 @@ export function Chat() {
 	const { user } = useUser();
 	const [messages, setMessages] = useState<Content[]>([]);
 	const [isAiLoading, setAiLoading] = useState<boolean>(false);
+	const messagesEndRef = useRef<HTMLDivElement>(null);
 
 	const form = useForm<z.infer<typeof medicalAiPromptSchema>>({
 		resolver: zodResolver(medicalAiPromptSchema),
@@ -72,6 +73,12 @@ export function Chat() {
 		setAiLoading(false);
 	}
 
+	// whenever a new response comes in, it is scrolled into view
+	useEffect(
+		() => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }),
+		[messages],
+	);
+
 	return (
 		<article className="space-y-10 p-2 sm:p-6 md:px-10">
 			<Form {...form}>
@@ -98,27 +105,35 @@ export function Chat() {
 							</FormItem>
 						)}
 					/>
-					<DisclaimerDialog>
-						{submitCount === 0 ? (
-							<AlertDialogTrigger asChild>
+					<div className="flex gap-x-3">
+						<DisclaimerDialog>
+							{submitCount === 0 ? (
+								<AlertDialogTrigger asChild>
+									<Button
+										type="submit"
+										className="cursor-pointer"
+										disabled={isSubmitting}
+									>
+										Ask
+									</Button>
+								</AlertDialogTrigger>
+							) : (
 								<Button
 									type="submit"
-									className="cursor-pointer"
 									disabled={isSubmitting}
+									className="cursor-pointer"
 								>
 									Ask
 								</Button>
-							</AlertDialogTrigger>
-						) : (
-							<Button
-								type="submit"
-								disabled={isSubmitting}
-								className="cursor-pointer"
-							>
-								Ask
-							</Button>
-						)}
-					</DisclaimerDialog>
+							)}
+						</DisclaimerDialog>
+						<Button
+							variant={"outline"}
+							onClick={() => setMessages([])}
+						>
+							Reset Chat
+						</Button>
+					</div>
 				</form>
 			</Form>
 			<section className="mx-auto flex max-w-xl flex-col gap-y-6">
@@ -160,6 +175,7 @@ export function Chat() {
 					</div>
 				))}
 				{isAiLoading && <Loader />}
+				<div ref={messagesEndRef} />
 			</section>
 		</article>
 	);
