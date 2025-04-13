@@ -76,7 +76,12 @@ export function Chat() {
 							<FormItem>
 								<FormLabel>Ask a medical question for clarification</FormLabel>
 								<FormControl>
-									<Textarea placeholder="What is hypertension?" {...field} />
+									<Textarea placeholder="What is hypertension?" {...field} onKeyDown={(e) => {
+										if(e.key === 'Enter' && !e.shiftKey){
+											e.preventDefault();
+											form.handleSubmit(onSubmit)();
+										}
+									}} />
 								</FormControl>
 								<FormDescription>
 									<span className="font-bold">Disclaimer:</span> This app uses
