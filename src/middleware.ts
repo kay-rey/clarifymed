@@ -5,7 +5,7 @@ export async function middleware(request: NextRequest) {
 	const authRes = await auth0.middleware(request);
 
   // for now its just dashboard as the protected route
-	const protectedRoutes = ["/dashboard"];
+	const protectedRoutes = ["/dashboard", "/saved"];
 
   // check if the route is protected
 	const isProtected = protectedRoutes.some(
