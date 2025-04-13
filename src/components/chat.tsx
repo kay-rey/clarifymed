@@ -86,7 +86,7 @@ export function Chat() {
 	}
 
 	return (
-		<article className="space-y-10 px-10">
+		<article className="space-y-10 p-2 sm:p-6 md:px-10">
 			<Form {...form}>
 				<form
 					onSubmit={form.handleSubmit(onSubmit)}
@@ -98,7 +98,8 @@ export function Chat() {
 						render={({ field }) => (
 							<FormItem>
 								<FormLabel>
-									Ask a medical question for clarification
+									Input your medical statement or general
+									medical clarifications
 								</FormLabel>
 								<FormControl>
 									<Textarea
@@ -121,10 +122,11 @@ export function Chat() {
 					/>
 					<DisclaimerDialog>
 						{submitCount === 0 ? (
-							<AlertDialogTrigger asChild disabled={isSubmitting}>
+							<AlertDialogTrigger asChild>
 								<Button
 									type="submit"
 									className="cursor-pointer"
+									disabled={isSubmitting}
 								>
 									Ask
 								</Button>
