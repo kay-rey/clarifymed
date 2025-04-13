@@ -17,7 +17,7 @@ import { medicalAiPromptSchema } from "@/lib/validation/schemas";
 import axios from "axios";
 import { useState } from "react";
 import { Content } from "@google/genai";
-import Markdown from "react-markdown";
+import { MarkdownRenderer } from "./ui/markdown-renderer";
 import { cn } from "@/lib/utils";
 import { Textarea } from "./ui/textarea";
 import Loader from "./loader";
@@ -25,17 +25,7 @@ import { useUser } from '@auth0/nextjs-auth0';
 import DisclaimerDialog from "./disclaimer-dialog";
 import { AlertDialogTrigger } from "./ui/alert-dialog";
 
-const markdownTheme = {
-	p: "mb-4 leading-relaxed",
-	h1: "text-2xl font-bold mb-4 ",
-	h2: "text-xl font-semibold mb-3",
-	h3: "text-lg font-medium mb-2",
-	ul: "list-disc pl-6 mb-4 space-y-2", // Changed from list-inside
-	ol: "list-decimal pl-6 mb-4 space-y-2", // Changed from list-inside
-	li: "pl-2",
-	code: "rounded px-1 py-0.5 font-mono text-sm",
-	pre: "rounded p-4 mb-4 overflow-x-auto",
-};
+// Markdown styles moved to markdown-renderer component
 
 export function Chat() {
 	const { user } = useUser();
@@ -84,6 +74,7 @@ export function Chat() {
 
 		setAiLoading(false);
 	}
+
 
 	return (
 		<article className="space-y-10 p-2 sm:p-6 md:px-10">
@@ -154,61 +145,7 @@ export function Chat() {
 								: "flex flex-col self-start",
 						)}
 					>
-						<Markdown
-							components={{
-								p: ({ node, ...props }) => (
-									<p className={markdownTheme.p} {...props} />
-								),
-								h1: ({ node, ...props }) => (
-									<h1
-										className={markdownTheme.h1}
-										{...props}
-									/>
-								),
-								h2: ({ node, ...props }) => (
-									<h2
-										className={markdownTheme.h2}
-										{...props}
-									/>
-								),
-								h3: ({ node, ...props }) => (
-									<h3
-										className={markdownTheme.h3}
-										{...props}
-									/>
-								),
-								ul: ({ node, ...props }) => (
-									<ul
-										className={markdownTheme.ul}
-										{...props}
-									/>
-								),
-								ol: ({ node, ...props }) => (
-									<ol
-										className={markdownTheme.ol}
-										{...props}
-									/>
-								),
-								li: ({ node, ...props }) => (
-									<li
-										className={markdownTheme.li}
-										{...props}
-									/>
-								),
-								code: ({ node, inline, ...props }) => (
-									<code
-										className={
-											inline
-												? markdownTheme.code
-												: markdownTheme.pre
-										}
-										{...props}
-									/>
-								),
-							}}
-						>
-							{message.parts && message.parts[0].text}
-						</Markdown>
+						<MarkdownRenderer content={message.parts ? message.parts[0].text : ''} />
 					</div>
 				))}
 				{isAiLoading && <Loader />}
