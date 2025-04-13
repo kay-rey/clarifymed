@@ -105,27 +105,35 @@ export function Chat() {
 							</FormItem>
 						)}
 					/>
-					<DisclaimerDialog>
-						{submitCount === 0 ? (
-							<AlertDialogTrigger asChild>
+					<div className="flex gap-x-3">
+						<DisclaimerDialog>
+							{submitCount === 0 ? (
+								<AlertDialogTrigger asChild>
+									<Button
+										type="submit"
+										className="cursor-pointer"
+										disabled={isSubmitting}
+									>
+										Ask
+									</Button>
+								</AlertDialogTrigger>
+							) : (
 								<Button
 									type="submit"
-									className="cursor-pointer"
 									disabled={isSubmitting}
+									className="cursor-pointer"
 								>
 									Ask
 								</Button>
-							</AlertDialogTrigger>
-						) : (
-							<Button
-								type="submit"
-								disabled={isSubmitting}
-								className="cursor-pointer"
-							>
-								Ask
-							</Button>
-						)}
-					</DisclaimerDialog>
+							)}
+						</DisclaimerDialog>
+						<Button
+							variant={"outline"}
+							onClick={() => setMessages([])}
+						>
+							Reset Chat
+						</Button>
+					</div>
 				</form>
 			</Form>
 			<section className="mx-auto flex max-w-xl flex-col gap-y-6">
