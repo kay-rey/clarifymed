@@ -17,13 +17,14 @@ import { medicalAiPromptSchema } from "@/lib/validation/schemas";
 import axios from "axios";
 import { useState } from "react";
 import { Content } from "@google/genai";
-import { MarkdownRenderer } from "./ui/markdown-renderer";
+import FormattedMarkdown from "./ui/formatted-markdown";
 import { cn } from "@/lib/utils";
 import { Textarea } from "./ui/textarea";
 import Loader from "./loader";
-import { useUser } from '@auth0/nextjs-auth0';
+import { useUser } from "@auth0/nextjs-auth0";
 import DisclaimerDialog from "./disclaimer-dialog";
 import { AlertDialogTrigger } from "./ui/alert-dialog";
+import { File, FilePlus, Plus } from "lucide-react";
 
 // Markdown styles moved to markdown-renderer component
 
@@ -39,7 +40,7 @@ export function Chat() {
 		},
 	});
 
-	const { submitCount, isSubmitting } = form.formState;
+	const { submitCount, isSubmitting, isSubmitSuccessful } = form.formState;
 
 	async function onSubmit(values: z.infer<typeof medicalAiPromptSchema>) {
 		// TODO: Error handling
@@ -57,12 +58,6 @@ export function Chat() {
 
 		const response = await axios.post("/api/clarify", allMessages);
 
-		await axios.post("/api/saved-responses", {
-			userId: user?.sub,
-			question: values.question,
-			response: response.data
-		  });
-
 		const aiResponse: Content = {
 			role: "model",
 			parts: [{ text: response.data }],
@@ -74,7 +69,6 @@ export function Chat() {
 
 		setAiLoading(false);
 	}
-
 
 	return (
 		<article className="space-y-10 p-2 sm:p-6 md:px-10">
@@ -96,15 +90,6 @@ export function Chat() {
 									<Textarea
 										placeholder="What is hypertension?"
 										{...field}
-										onKeyDown={(e) => {
-											if (
-												e.key === "Enter" &&
-												!e.shiftKey
-											) {
-												e.preventDefault();
-												form.handleSubmit(onSubmit)();
-											}
-										}}
 									/>
 								</FormControl>
 								<FormMessage />
@@ -142,10 +127,34 @@ export function Chat() {
 							"overflow-auto rounded-md",
 							message.role === "user"
 								? "self-end bg-gray-100 p-4 dark:bg-gray-900"
-								: "flex flex-col self-start",
+								: "self-start",
 						)}
 					>
-						<MarkdownRenderer content={message.parts ? message.parts[0].text : ''} />
+						<FormattedMarkdown
+							content={message.parts ? message.parts[0].text : ""}
+						/>
+						{isSubmitSuccessful && message.role === "model" && (
+							<Button
+								variant={"secondary"}
+								onClick={async () => {
+									const saved = await axios.post(
+										"/api/saved-responses",
+										{
+											userId: user?.sub,
+											question:
+												messages[index - 1].parts![0]
+													.text,
+											response: message.parts![0].text,
+										},
+									);
+
+									console.log("SAVED RESPONSE:", saved);
+								}}
+							>
+								<FilePlus />
+								Save as Note
+							</Button>
+						)}
 					</div>
 				))}
 				{isAiLoading && <Loader />}
