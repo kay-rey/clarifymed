@@ -4,73 +4,85 @@ import { redirect } from "next/navigation";
 import Image from "next/image";
 
 export default async function Home() {
-  // Fetch the user session
-  const session = await auth0.getSession();
+	// Fetch the user session
+	const session = await auth0.getSession();
 
-  // If session exists, redirect users to dashboard
-  if (session) {
-    redirect("/dashboard");
-  }
+	// If session exists, redirect users to dashboard
+	if (session) {
+		redirect("/dashboard");
+	}
 
-  // If no session, show sign-up and login buttons
-  return (
-    <main className="min-h-screen flex flex-col items-center justify-center bg-background p-6 relative overflow-hidden">
-      {/* Decorative elements - subtle background shapes */}
-      <div className="absolute top-0 right-0 w-64 h-64 rounded-full bg-primary/5 -translate-y-1/3 translate-x-1/3" />
-      <div className="absolute bottom-0 left-0 w-80 h-80 rounded-full bg-secondary/5 translate-y-1/3 -translate-x-1/3" />
-      
-      <div className="w-full max-w-md flex flex-col items-center space-y-14 z-10">
-        {/* Logo and Project Name/Description */}
-        <div className="flex flex-col items-center space-y-2">
-          {/* Logo */}
-          <div className="w-32 h-32 relative mb-1">
-            <Image 
-              src="/logo.png" 
-              alt="ClarifyMed Logo"
-              fill
-              priority
-              className="object-contain"
-            />
-          </div>
-            
-          {/* Name and Tagline */}
-          <div className="text-center space-y-2">
-            <h1 className="text-5xl font-bold text-primary tracking-tight">
-              ClarifyMed
-            </h1>
-            <p className="text-muted-foreground text-lg">
-              Simplifying healthcare communication
-            </p>
-          </div>
-        </div>
+	// If no session, show sign-up and login buttons
+	return (
+		<main className="bg-background relative flex min-h-screen flex-col items-center justify-center overflow-hidden p-6">
+			{/* Decorative elements - subtle background shapes */}
+			<div className="bg-primary/5 absolute top-0 right-0 h-64 w-64 translate-x-1/3 -translate-y-1/3 rounded-full" />
+			<div className="bg-secondary/5 absolute bottom-0 left-0 h-80 w-80 -translate-x-1/3 translate-y-1/3 rounded-full" />
 
-        {/* Authentication Buttons */}
-        <div className="w-full flex flex-col space-y-4 mt-4">
-          <a href="/auth/login?screen_hint=signup" className="w-full">
-            <button className="w-full py-3.5 px-4 bg-primary text-primary-foreground rounded-xl font-medium hover:bg-primary/90 transition-all shadow-md hover:shadow-lg cursor-pointer group">
-              <span className="flex items-center justify-center">
-                <span>Get Started</span>
-                <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 ml-2 group-hover:translate-x-1 transition-transform" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </span>
-            </button>
-          </a>
+			<div className="z-10 flex w-full max-w-md flex-col items-center space-y-14">
+				{/* Logo and Project Name/Description */}
+				<div className="flex flex-col items-center space-y-2">
+					{/* Logo */}
+					<div className="relative mb-1 h-32 w-32">
+						<Image
+							src="/logo.png"
+							alt="ClarifyMed Logo"
+							fill
+							priority
+							className="object-contain"
+						/>
+					</div>
 
-          <a href="/auth/login" className="w-full">
-            <button className="w-full py-3.5 px-4 bg-secondary text-secondary-foreground rounded-xl font-medium hover:bg-secondary/90 transition-all shadow-md hover:shadow-lg cursor-pointer flex items-center justify-center">
-              <span>Log in</span>
-            </button>
-          </a>
-        </div>
+					{/* Name and Tagline */}
+					<div className="space-y-2 text-center">
+						<h1 className="text-primary text-5xl font-bold tracking-tight">
+							ClarifyMed
+						</h1>
+						<p className="text-muted-foreground text-lg">
+							Simplifying healthcare communication
+						</p>
+					</div>
+				</div>
 
-        {/* Footer */}
-        <div className="text-center mt-10">
-          <p className="text-muted-foreground text-xs">
-            © {new Date().getFullYear()} ClarifyMed • Made with 💚 for AI Hackfest 2025 
-          </p>
-        </div>
-      </div>
-    </main>
-  );
+				{/* Authentication Buttons */}
+				<div className="mt-4 flex w-full flex-col space-y-4">
+					<a href="/auth/login?screen_hint=signup" className="w-full">
+						<button className="bg-primary text-primary-foreground hover:bg-primary/90 group w-full cursor-pointer rounded-xl px-4 py-3.5 font-medium shadow-md transition-all hover:shadow-lg">
+							<span className="flex items-center justify-center">
+								<span>Get Started</span>
+								<svg
+									xmlns="http://www.w3.org/2000/svg"
+									className="ml-2 h-5 w-5 transition-transform group-hover:translate-x-1"
+									fill="none"
+									viewBox="0 0 24 24"
+									stroke="currentColor"
+								>
+									<path
+										strokeLinecap="round"
+										strokeLinejoin="round"
+										strokeWidth={2}
+										d="M14 5l7 7m0 0l-7 7m7-7H3"
+									/>
+								</svg>
+							</span>
+						</button>
+					</a>
+
+					<a href="/auth/login" className="w-full">
+						<button className="bg-secondary text-secondary-foreground hover:bg-secondary/90 flex w-full cursor-pointer items-center justify-center rounded-xl px-4 py-3.5 font-medium shadow-md transition-all hover:shadow-lg">
+							<span>Log in</span>
+						</button>
+					</a>
+				</div>
+
+				{/* Footer */}
+				<div className="mt-10 text-center">
+					<p className="text-muted-foreground text-xs">
+						© {new Date().getFullYear()} ClarifyMed • Made with 💚 for AI
+						Hackfest 2025
+					</p>
+				</div>
+			</div>
+		</main>
+	);
 }
