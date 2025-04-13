@@ -24,7 +24,9 @@ import Loader from "./loader";
 import { useUser } from "@auth0/nextjs-auth0";
 import DisclaimerDialog from "./disclaimer-dialog";
 import { AlertDialogTrigger } from "./ui/alert-dialog";
-import { File, FilePlus, Plus } from "lucide-react";
+import { FilePlus } from "lucide-react";
+import { toast } from "sonner";
+import { Toaster } from "./ui/sonner";
 
 // Markdown styles moved to markdown-renderer component
 
@@ -40,7 +42,7 @@ export function Chat() {
 		},
 	});
 
-	const { submitCount, isSubmitting, isSubmitSuccessful } = form.formState;
+	const { submitCount, isSubmitting } = form.formState;
 
 	async function onSubmit(values: z.infer<typeof medicalAiPromptSchema>) {
 		// TODO: Error handling
@@ -120,6 +122,7 @@ export function Chat() {
 				</form>
 			</Form>
 			<section className="mx-auto flex max-w-xl flex-col gap-y-6">
+				<Toaster />
 				{messages.map((message, index) => (
 					<div
 						key={index}
@@ -133,22 +136,21 @@ export function Chat() {
 						<FormattedMarkdown
 							content={message.parts ? message.parts[0].text : ""}
 						/>
-						{isSubmitSuccessful && message.role === "model" && (
+
+						{message.role === "model" && (
 							<Button
 								variant={"secondary"}
 								onClick={async () => {
-									const saved = await axios.post(
-										"/api/saved-responses",
-										{
-											userId: user?.sub,
-											question:
-												messages[index - 1].parts![0]
-													.text,
-											response: message.parts![0].text,
-										},
-									);
+									await axios.post("/api/saved-responses", {
+										userId: user?.sub,
+										question:
+											messages[index - 1].parts![0].text,
+										response: message.parts![0].text,
+									});
 
-									console.log("SAVED RESPONSE:", saved);
+									toast.success(
+										"Note has been saved. View in Saved Notes.",
+									);
 								}}
 							>
 								<FilePlus />
