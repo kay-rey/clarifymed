@@ -10,8 +10,8 @@ import { BaseModel } from '../types/base'
 import { ObjectId } from 'mongodb'
 
 export interface SavedResponse extends BaseModel {
-    /** Reference to the user who saved the response */
-    userId: ObjectId
+    /** Reference to the user who saved the response (Auth0 user ID) */
+    userId: string
     /** Original question asked by the user */
     question: string
     /** AI-generated response */

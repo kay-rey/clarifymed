@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server';
 import { getDb } from '@/lib/db/dbConnect';
-import { SavedResponse } from '@/lib/models/SavedResponse';
 
 export async function POST(request: Request) {
     try {
@@ -37,7 +36,7 @@ export async function GET(request: Request) {
 
         const collections = await getDb();
         const responses = await collections.savedResponses
-            .find({ userId })
+            .find({ userId: userId }) // Using the string directly for Auth0 IDs
             .sort({ createdAt: -1 })
             .toArray();
 
