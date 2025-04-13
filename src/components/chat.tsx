@@ -58,12 +58,6 @@ export function Chat() {
 
 		const response = await axios.post("/api/clarify", allMessages);
 
-		await axios.post("/api/saved-responses", {
-			userId: user?.sub,
-			question: values.question,
-			response: response.data,
-		});
-
 		const aiResponse: Content = {
 			role: "model",
 			parts: [{ text: response.data }],
@@ -140,9 +134,25 @@ export function Chat() {
 							content={message.parts ? message.parts[0].text : ""}
 						/>
 						{isSubmitSuccessful && message.role === "model" && (
-							<Button variant={"secondary"}>
+							<Button
+								variant={"secondary"}
+								onClick={async () => {
+									const saved = await axios.post(
+										"/api/saved-responses",
+										{
+											userId: user?.sub,
+											question:
+												messages[index - 1].parts![0]
+													.text,
+											response: message.parts![0].text,
+										},
+									);
+
+									console.log("SAVED RESPONSE:", saved);
+								}}
+							>
 								<FilePlus />
-								Save
+								Save as Note
 							</Button>
 						)}
 					</div>
