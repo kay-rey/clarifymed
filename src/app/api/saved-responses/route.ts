@@ -1,6 +1,5 @@
 import { NextResponse } from "next/server";
 import { getDb } from "@/lib/db/dbConnect";
-import { SavedResponse } from "@/lib/models/SavedResponse";
 
 export async function POST(request: Request) {
 	try {
